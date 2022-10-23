@@ -33,9 +33,9 @@ router.post('/invite', auth, async (req, res ) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { username, password, email, displayName } = req.body;
+        const { password, email, displayName } = req.body;
 
-        const userData = {username, password, email, displayName};
+        const userData = { password, email, displayName};
 
         const user = new User(userData);
 
