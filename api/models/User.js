@@ -42,6 +42,8 @@ const UserSchema = new Schema({
         required: true,
     },
     facebookId: String,
+    invited: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    inviters: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
 });
 
 UserSchema.pre('save', async function (next) {
@@ -59,6 +61,30 @@ UserSchema.set('toJSON', {
         return ret;
     },
 });
+
+UserSchema.methods.addToInvited = function (user) {
+    return this.invited = [...this.invited, user];
+};
+
+UserSchema.methods.addToInviters = function (user) {
+    return this.inviters = [...this.inviters, user];
+};
+
+UserSchema.methods.removeFromInvited = function (user) {
+    const userIdx = this.invited.indexOf(user);
+    if (userIdx !== -1) {
+        return this.invited.splice(1, userIdx);
+    }
+    return false;
+};
+
+UserSchema.methods.removeFromInviters = function (user) {
+    const userIdx = this.inviters.indexOf(user);
+    if (userIdx !== -1) {
+        return this.inviters.splice(1, userIdx);
+    }
+    return false;
+};
 
 UserSchema.methods.checkPassword = function (password) {
     return bcrypt.compare(password, this.password);

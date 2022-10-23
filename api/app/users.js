@@ -1,33 +1,43 @@
 const express = require('express');
-const multer = require("multer");
 const {nanoid} = require("nanoid");
-const path = require("path");
 const axios = require("axios");
 const config = require("../config");
-const Users = require('../models/User');
+const User = require('../models/User');
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, config.uploadPath);
-    },
-    filename: (req, file, cb) => {
-        cb(null, nanoid() + path.extname(file.originalname));
-    },
+router.post('/invite', auth, async (req, res ) => {
+    const { email } = req.body;
+    const userId = req.user['_id'];
+
+    if (email === req.user.email) {
+        return res.status(400).send({message: "You cannot add yourself as a friend."});
+    }
+
+    try {
+        const friend = await User.find({email});
+        const user = await User.findById(userId);
+
+        user.addToInvited(friend['_id']);
+        friend.addToInviters(user['_id']);
+
+        await user.save({validateBeforeSave: false});
+        await friend.save({validateBeforeSave: false});
+
+        res.send({message: "Friend invited"});
+    } catch (e) {
+        res.status(404).send(e);
+    }
 });
 
-const upload = multer({storage});
-
-router.post('/', upload.single('avatarImage'), async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { username, password, email, displayName } = req.body;
 
-        const avatarImage = req.file ? 'uploads/' + req.file.filename : null;
+        const userData = {username, password, email, displayName};
 
-        const userData = {username, password, avatarImage, email, displayName};
-
-        const user = new Users(userData);
+        const user = new User(userData);
 
         user.generateToken();
         await user.save();
@@ -41,7 +51,7 @@ router.post('/', upload.single('avatarImage'), async (req, res) => {
 router.post('/sessions', async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await Users.findOne({email});
+    const user = await User.findOne({email});
 
     if (!user) {
         return res.status(401).send({message: "Email or password is wrong"});
@@ -76,7 +86,7 @@ router.post('/facebookLogin', async (req, res) => {
             return res.status(401).send({message: "Wrong user ID"});
         }
 
-        let user = await Users.findOne({facebookId: req.body.id});
+        let user = await User.findOne({facebookId: req.body.id});
 
         if (!user) {
             const userData = {
@@ -84,10 +94,9 @@ router.post('/facebookLogin', async (req, res) => {
                 password: nanoid(),
                 facebookId: req.body.id,
                 displayName: req.body.name,
-                avatarImage: req.body.picture.data.url,
             }
 
-            user = new Users(userData);
+            user = new User(userData);
         }
 
         user.generateToken();
@@ -99,13 +108,35 @@ router.post('/facebookLogin', async (req, res) => {
     }
 });
 
+router.delete('/invite/:id', auth, async (req, res) => {
+    const userId = req.user['_id'];
+    const friendId = req.params.id;
+
+    try {
+        const friend = await User.findById(friendId);
+        const user = await User.findById(userId);
+
+        const removeInvited = user.removeFromInvited(friend['_id']);
+        const removeInviters = friend.removeFromInviters(user['_id']);
+
+        if (!removeInvited || !removeInviters) {
+            return res.status(404).send({message: "No user found with this id."});
+        }
+
+        await user.save({validateBeforeSave: false});
+        await friend.save({validateBeforeSave: false});
+    } catch (e) {
+        res.status(404).send(e);
+    }
+});
+
 router.delete('/sessions', async (req, res) => {
     const token = req.get('Authorization');
     const success = {message: 'Success'};
 
     if (!token) return res.send(success);
 
-    const user = await Users.findOne({token});
+    const user = await User.findOne({token});
 
     if (!user) return res.send(success);
 
