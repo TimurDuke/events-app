@@ -27,7 +27,27 @@ const usersSlice = createSlice({
         },
         clearRegisterErrors(state) {
             state.registerError = null;
-        }
+        },
+        loginUserRequest(state) {
+            state.loginLoading = true;
+        },
+        loginUserSuccess(state, {payload: user}) {
+            state.loginLoading = false;
+            state.user = user;
+        },
+        loginUserFailure(state, {payload: error}) {
+            state.loginLoading = false;
+            state.loginError = error;
+        },
+        clearLoginErrors(state) {
+            state.loginError = null;
+        },
+        facebookLoginRequest(state) {
+            state.loginLoading = true;
+        },
+        logoutUserRequest (state) {
+            state.user = null;
+        },
     }
 });
 

@@ -2,10 +2,9 @@ import {useState} from "react";
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import {Grid} from "@mui/material";
+import {Grid, MenuItem} from "@mui/material";
 import {useDispatch} from "react-redux";
-
-// import {logoutUser} from "../../../../store/actions/usersActions";
+import {logoutUserRequest} from "../../../../store/actions/usersActions";
 
 const UserMenu = ({user}) => {
     const dispatch = useDispatch();
@@ -54,7 +53,7 @@ const UserMenu = ({user}) => {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                {/*<MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>*/}
+                <MenuItem onClick={() => dispatch(logoutUserRequest(user?.token))}>Logout</MenuItem>
             </Menu>
         </div>
     );
