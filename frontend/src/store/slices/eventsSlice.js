@@ -8,6 +8,8 @@ const initialState = {
     getEventsError: null,
     postEventLoading: false,
     postEventError: null,
+    deleteEventLoading: false,
+    deleteEventError: null,
 };
 
 const eventsSlice = createSlice({
@@ -38,6 +40,16 @@ const eventsSlice = createSlice({
         postEventsFailure(state, {payload: error}) {
             state.postEventLoading = false;
             state.postEventError = error;
+        },
+        deleteEventRequest(state) {
+            state.deleteEventLoading = true;
+        },
+        deleteEventSuccess(state) {
+            state.deleteEventLoading = false;
+        },
+        deleteEventFailure(state, {payload: error}) {
+            state.deleteEventLoading = false;
+            state.deleteEventError = error;
         }
     }
 });

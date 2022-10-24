@@ -7,8 +7,19 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post('/invite', auth, async (req, res ) => {
+router.post('/invite', auth, async (req, res) => {
+    const validateEmail = value => {
+        const pattern = /^([a-zA-Z0-9]+[_.]?[a-zA-Z0-9])+@([a-zA-Z]{2,5})\.([a-z]{2,3})(\.[a-z]{2,3})?$/;
+
+        return pattern.test(value);
+    };
+
     const { email } = req.body;
+
+    if (!validateEmail(email)) {
+        return res.status(400).send({message: "Email not valid!"});
+    }
+
     const userId = req.user['_id'];
 
     if (email === req.user.email) {
@@ -19,23 +30,43 @@ router.post('/invite', auth, async (req, res ) => {
         const friend = await User.find({email});
         const user = await User.findById(userId);
 
-        user.addToInvited({id: friend['_id'], email: friend['email']});
-        friend.addToInviters({id: user['_id'], email: user['email']});
+        if (friend.length === 0) {
+            return res.status(404).send({message: "User with this email not found!"});
+        }
+
+        const arr = user['invited'].find(user => user.id === friend[0]['_id'].toString());
+
+        if (arr) {
+            return res.status(400).send({message: "This user is already your friend."});
+        }
+
+        const friendData = {
+            id: friend[0]['_id'],
+            email: friend[0]['email']
+        };
+
+        const userData = {
+            id: user['_id'],
+            email: user['email']
+        };
+
+        user['invited'].push(friendData);
+        friend[0]['inviters'].push(userData);
 
         await user.save({validateBeforeSave: false});
-        await friend.save({validateBeforeSave: false});
+        await friend[0].save({validateBeforeSave: false});
 
-        res.send({message: "Friend invited"});
+        res.send(user);
     } catch (e) {
-        res.status(404).send(e);
+        res.status(400).send(e);
     }
 });
 
 router.post('/', async (req, res) => {
     try {
-        const { password, email, displayName } = req.body;
+        const {password, email, displayName} = req.body;
 
-        const userData = { password, email, displayName};
+        const userData = {password, email, displayName};
 
         const user = new User(userData);
 
@@ -49,7 +80,7 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/sessions', async (req, res) => {
-    const { email, password } = req.body;
+    const {email, password} = req.body;
 
     const user = await User.findOne({email});
 
@@ -76,7 +107,7 @@ router.post('/facebookLogin', async (req, res) => {
     const debugTokenUrl = `https://graph.facebook.com/debug_token?input_token=${inputToken}&access_token=${accessToken}`;
 
     try {
-        const { data } = await axios.get(debugTokenUrl);
+        const {data} = await axios.get(debugTokenUrl);
 
         if (data.data.error) {
             return res.status(401).send({message: "Facebook token incorrect!"});
@@ -116,15 +147,19 @@ router.delete('/invite/:id', auth, async (req, res) => {
         const friend = await User.findById(friendId);
         const user = await User.findById(userId);
 
-        const removeInvited = user.removeFromInvited({id: friend['_id'], email: friend['email']});
-        const removeInviters = friend.removeFromInviters({id: user['_id'], email: user['email']});
+        const friendInv = user['invited'].find(user => user.id === friend['_id'].toString());
+        const friendIdx = user['invited'].indexOf(friendInv);
 
-        if (!removeInvited || !removeInviters) {
-            return res.status(404).send({message: "No user found with this id."});
-        }
+        const userInv = friend['inviters'].find(friend => friend.id === user['_id'].toString());
+        const userIdx = friend['inviters'].indexOf(userInv);
+
+        user['invited'].splice(friendIdx, 1);
+        friend['inviters'].splice(userIdx, 1);
 
         await user.save({validateBeforeSave: false});
         await friend.save({validateBeforeSave: false});
+
+        res.send(user);
     } catch (e) {
         res.status(404).send(e);
     }

@@ -8,7 +8,7 @@ import {
     loginUserSuccess,
     loginUserRequest,
     facebookLoginRequest,
-    logoutUserRequest
+    logoutUserRequest, inviteFriendFailure, inviteFriendSuccess, inviteFriendRequest
 } from "../actions/usersActions";
 
 import history from "../../history";
@@ -65,11 +65,29 @@ export function* logoutUserSaga({payload: userToken}) {
     }
 }
 
+export function* inviteFriendSaga({payload: friendEmail}) {
+    try {
+        const response = yield axiosApi.post('/users/invite', friendEmail);
+
+        if (response.data) {
+            yield put(inviteFriendSuccess(response.data));
+            history.push('/');
+        }
+    } catch (e) {
+        if (e.response && e.response.data) {
+            yield put(inviteFriendFailure(e.response.data));
+        } else {
+            yield put(inviteFriendFailure({global: 'No internet'}));
+        }
+    }
+}
+
 const usersSagas = [
     takeEvery(registerUserRequest, registerUserSaga),
     takeEvery(loginUserRequest, loginUserSaga),
     takeEvery(facebookLoginRequest, facebookLoginSaga),
     takeEvery(logoutUserRequest, logoutUserSaga),
+    takeEvery(inviteFriendRequest, inviteFriendSaga),
 ];
 
 export default usersSagas;

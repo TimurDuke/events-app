@@ -1,5 +1,7 @@
 import {put, takeEvery} from 'redux-saga/effects';
 import {
+    deleteEventFailure,
+    deleteEventRequest, deleteEventSuccess,
     getEventsFailure,
     getEventsRequest,
     getEventsSuccess, postEventRequest,
@@ -36,9 +38,22 @@ export function* postEventSaga({payload: eventData}) {
     }
 }
 
+export function* deleteEventSaga({payload: eventId}) {
+    try {
+        const response = yield axiosApi.delete('/events/' + eventId);
+
+        if (response.data) {
+            yield put(deleteEventSuccess());
+        }
+    } catch (e) {
+        yield put(deleteEventFailure(e));
+    }
+}
+
 const eventsSagas = [
     takeEvery(getEventsRequest, getEventsSaga),
     takeEvery(postEventRequest, postEventSaga),
+    takeEvery(deleteEventRequest, deleteEventSaga),
 ];
 
 export default eventsSagas;

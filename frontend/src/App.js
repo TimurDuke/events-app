@@ -6,6 +6,7 @@ import Register from "./containers/Register/Register";
 import Main from "./containers/Main/Main";
 import Login from "./containers/Login/Login";
 import AddEventForm from "./components/AddEventForm/AddEventForm";
+import InviteForm from "./components/IviteForm/InviteForm";
 
 const ProtectedRoute = ({isAllowed, redirectTo, ...props}) => {
     return isAllowed ?
@@ -40,6 +41,13 @@ const App = () => {
                     redirectTo="/login"
                     path="/addEvent"
                     component={AddEventForm}
+                />
+
+                <ProtectedRoute
+                    isAllowed={user}
+                    redirectTo="/login"
+                    path="/inviteFriend"
+                    component={InviteForm}
                 />
 
             </Switch>

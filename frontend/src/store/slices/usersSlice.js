@@ -8,6 +8,8 @@ export const initialState = {
     registerError: null,
     loginLoading: false,
     loginError: null,
+    inviteLoading: false,
+    inviteError: null,
 };
 
 const usersSlice = createSlice({
@@ -48,6 +50,17 @@ const usersSlice = createSlice({
         logoutUserRequest (state) {
             state.user = null;
         },
+        inviteFriendRequest(state) {
+            state.inviteLoading = true;
+        },
+        inviteFriendSuccess(state, {payload: user}) {
+            state.inviteLoading = false;
+            state.user = user;
+        },
+        inviteFriendFailure(state, {payload: error}) {
+            state.inviteLoading = false;
+            state.inviteError = error;
+        }
     }
 });
 

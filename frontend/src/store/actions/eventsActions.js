@@ -6,5 +6,8 @@ export const {
     getEventsFailure,
     postEventRequest,
     postEventSuccss,
-    postEventsFailure
+    postEventsFailure,
+    deleteEventRequest,
+    deleteEventSuccess,
+    deleteEventFailure,
 } = eventsSlice.actions

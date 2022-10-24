@@ -17,7 +17,7 @@ const Layout = ({children}) => {
                 <ToastContainer/>
                 <Grid
                     container
-                    justifyContent={{sm: 'space-between', xs: 'center'}}
+                    justifyContent='space-between'
                     alignItems='center'
                 >
                     <Grid item sx={{marginBottom: {sm: '0px', xs: '15px'}}}>
@@ -35,7 +35,7 @@ const Layout = ({children}) => {
                     </Grid>
                 </Grid>
             </AppBar>
-            <Toolbar sx={{marginBottom: {sm: '20px', xs: '180px'}}}/>
+            <Toolbar sx={{marginBottom: '50px'}}/>
             <Container maxWidth="xl">
                 {children}
             </Container>

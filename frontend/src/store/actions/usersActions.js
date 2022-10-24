@@ -5,10 +5,17 @@ export const {
     registerUserSuccess,
     registerUserFailure,
     clearRegisterErrors,
+
     loginUserRequest,
     loginUserSuccess,
     loginUserFailure,
     clearLoginErrors,
+
     facebookLoginRequest,
-    logoutUserRequest
+
+    logoutUserRequest,
+
+    inviteFriendRequest,
+    inviteFriendSuccess,
+    inviteFriendFailure
 } = usersSlice.actions;

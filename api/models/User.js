@@ -18,7 +18,6 @@ const validateEmail = value => {
     if (!pattern.test(value)) return false;
 };
 
-
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -42,8 +41,8 @@ const UserSchema = new Schema({
         required: true,
     },
     facebookId: String,
-    invited: [{type: Object}],
-    inviters: [{type: Object}],
+    invited: [{id: String, email: String}],
+    inviters: [{id: String, email: String}],
 });
 
 UserSchema.pre('save', async function (next) {
@@ -62,29 +61,21 @@ UserSchema.set('toJSON', {
     },
 });
 
-UserSchema.methods.addToInvited = function (userData) {
-    return this.invited = [...this.invited, userData];
-};
-
-UserSchema.methods.addToInviters = function (userData) {
-    return this.inviters = [...this.inviters, userData];
-};
-
-UserSchema.methods.removeFromInvited = function (userData) {
-    const userDataIdx = this.invited.indexOf(userData);
-    if (userDataIdx !== -1) {
-        return this.invited.splice(1, userDataIdx);
-    }
-    return false;
-};
-
-UserSchema.methods.removeFromInviters = function (userData) {
-    const userDataIdx = this.inviters.indexOf(userData);
-    if (userDataIdx !== -1) {
-        return this.inviters.splice(1, userDataIdx);
-    }
-    return false;
-};
+// UserSchema.methods.removeFromInvited = function (userData) {
+//     const userDataIdx = this.invited.indexOf(userData);
+//     if (userDataIdx !== -1) {
+//         return this.invited.splice(1, userDataIdx);
+//     }
+//     return false;
+// };
+//
+// UserSchema.methods.removeFromInviters = function (userData) {
+//     const userDataIdx = this.inviters.indexOf(userData);
+//     if (userDataIdx !== -1) {
+//         return this.inviters.splice(1, userDataIdx);
+//     }
+//     return false;
+// };
 
 UserSchema.methods.checkPassword = function (password) {
     return bcrypt.compare(password, this.password);

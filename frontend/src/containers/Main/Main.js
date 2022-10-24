@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {getEventsRequest} from "../../store/actions/eventsActions";
-import Event from "../../components/Event/Event";
 import {Grid} from "@mui/material";
+import {deleteEventRequest, getEventsRequest} from "../../store/actions/eventsActions";
+import Event from "../../components/Event/Event";
+import ButtonControllers from "../../components/ButtonControllers/ButtonControllers";
 
 const Main = () => {
     const dispatch = useDispatch();
@@ -15,17 +16,22 @@ const Main = () => {
         dispatch(getEventsRequest());
     }, [dispatch]);
 
+    const deleteEventHandler = async eventId => {
+        await dispatch(deleteEventRequest(eventId));
+        await dispatch(getEventsRequest());
+    };
+
     if (!user) {
-        return <Redirect to='/login' />;
+        return <Redirect to='/login'/>;
     }
 
     return (
         <>
             <Grid container spacing={2}>
                 {!!events.length
-                    ? <Grid item xs={10}>
+                    ? <Grid item xs={9}>
                         {events.map(event => {
-                            if (!!user?.inviters.filter(user => user === event.author).length || user['_id'] === event.author) {
+                            if (!!user?.inviters.filter(user => user.id === event.author).length || user['_id'] === event.author) {
                                 return <Event
                                     key={event['_id']}
                                     user={user}
@@ -33,6 +39,7 @@ const Main = () => {
                                     title={event.title}
                                     date={event.date}
                                     leadTime={event.leadTime}
+                                    deleteHandler={() => deleteEventHandler(event['_id'])}
                                 />;
                             } else {
                                 return null;
@@ -41,8 +48,8 @@ const Main = () => {
                     </Grid>
                     : null
                 }
-                <Grid item xs={2}>
-                    Buttons
+                <Grid item xs={3} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <ButtonControllers/>
                 </Grid>
             </Grid>
         </>
