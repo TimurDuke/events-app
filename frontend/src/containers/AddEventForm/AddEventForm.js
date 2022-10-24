@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button, Container, Grid, Typography} from "@mui/material";
 import {makeStyles} from "tss-react/mui";
 import {useDispatch, useSelector} from "react-redux";
-import FormElement from "../UI/Form/FormElement/FormElement";
+import FormElement from "../../components/UI/Form/FormElement/FormElement";
 import {postEventRequest} from "../../store/actions/eventsActions";
 
 const useStyles = makeStyles()(theme => ({

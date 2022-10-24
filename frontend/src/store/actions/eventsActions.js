@@ -6,7 +6,7 @@ export const {
     getEventsFailure,
     postEventRequest,
     postEventSuccss,
-    postEventsFailure,
+    postEventFailure,
     deleteEventRequest,
     deleteEventSuccess,
     deleteEventFailure,

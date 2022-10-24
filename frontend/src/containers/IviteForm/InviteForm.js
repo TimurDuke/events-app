@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Container, Grid, Typography} from "@mui/material";
-import FormElement from "../UI/Form/FormElement/FormElement";
+import FormElement from "../../components/UI/Form/FormElement/FormElement";
 import {makeStyles} from "tss-react/mui";
 import {useDispatch, useSelector} from "react-redux";
-import {inviteFriendRequest} from "../../store/actions/usersActions";
+import {clearInviteError, inviteFriendRequest} from "../../store/actions/usersActions";
 
 const useStyles = makeStyles()(theme => ({
     paper: {
@@ -22,6 +22,12 @@ const InviteForm = () => {
     const error = useSelector(state => state.users.inviteError);
 
     const [friendEmail, setFriendEmail] = useState('');
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearInviteError());
+        };
+    }, []);
 
     const submitFormHandler = e => {
         e.preventDefault();

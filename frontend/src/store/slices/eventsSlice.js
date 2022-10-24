@@ -31,15 +31,16 @@ const eventsSlice = createSlice({
         },
         postEventRequest(state) {
             state.postEventLoading = true;
-            state.postEventError = null;
         },
         postEventSuccss(state) {
             state.postEventLoading = false;
-            state.postEventError = null;
         },
-        postEventsFailure(state, {payload: error}) {
+        postEventFailure(state, {payload: error}) {
             state.postEventLoading = false;
             state.postEventError = error;
+        },
+        clearPostEventErrors(state) {
+            state.postEventError = null
         },
         deleteEventRequest(state) {
             state.deleteEventLoading = true;

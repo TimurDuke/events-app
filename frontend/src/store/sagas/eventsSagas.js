@@ -1,11 +1,13 @@
 import {put, takeEvery} from 'redux-saga/effects';
 import {
     deleteEventFailure,
-    deleteEventRequest, deleteEventSuccess,
+    deleteEventRequest,
+    deleteEventSuccess,
     getEventsFailure,
     getEventsRequest,
-    getEventsSuccess, postEventRequest,
-    postEventsFailure,
+    getEventsSuccess,
+    postEventFailure,
+    postEventRequest,
     postEventSuccss
 } from "../actions/eventsActions";
 import axiosApi from "../../axiosApi";
@@ -31,9 +33,9 @@ export function* postEventSaga({payload: eventData}) {
         }
     } catch (e) {
         if (e.response && e.response.data) {
-            yield put(postEventsFailure(e.response.data));
+            yield put(postEventFailure(e.response.data));
         } else {
-            yield put(postEventsFailure({global: 'No internet'}));
+            yield put(postEventFailure({global: 'No internet'}));
         }
     }
 }

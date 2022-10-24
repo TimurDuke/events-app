@@ -5,8 +5,9 @@ import {useSelector} from "react-redux";
 import Register from "./containers/Register/Register";
 import Main from "./containers/Main/Main";
 import Login from "./containers/Login/Login";
-import AddEventForm from "./components/AddEventForm/AddEventForm";
-import InviteForm from "./components/IviteForm/InviteForm";
+import AddEventForm from "./containers/AddEventForm/AddEventForm";
+import InviteForm from "./containers/IviteForm/InviteForm";
+import InvitedFriends from "./containers/InvitedFriends/InvitedFriends";
 
 const ProtectedRoute = ({isAllowed, redirectTo, ...props}) => {
     return isAllowed ?
@@ -48,6 +49,13 @@ const App = () => {
                     redirectTo="/login"
                     path="/inviteFriend"
                     component={InviteForm}
+                />
+
+                <ProtectedRoute
+                    isAllowed={user}
+                    redirectTo="/login"
+                    path="/viewInvites"
+                    component={InvitedFriends}
                 />
 
             </Switch>

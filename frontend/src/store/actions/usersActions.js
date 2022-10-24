@@ -17,5 +17,10 @@ export const {
 
     inviteFriendRequest,
     inviteFriendSuccess,
-    inviteFriendFailure
+    inviteFriendFailure,
+    clearInviteError,
+
+    deleteFriendRequest,
+    deleteFriendSuccess,
+    deleteFriendFailure
 } = usersSlice.actions;

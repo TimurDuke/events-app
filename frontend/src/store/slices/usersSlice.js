@@ -10,6 +10,8 @@ export const initialState = {
     loginError: null,
     inviteLoading: false,
     inviteError: null,
+    deleteFriendLoading: false,
+    deleteFriendError: null,
 };
 
 const usersSlice = createSlice({
@@ -47,7 +49,7 @@ const usersSlice = createSlice({
         facebookLoginRequest(state) {
             state.loginLoading = true;
         },
-        logoutUserRequest (state) {
+        logoutUserRequest(state) {
             state.user = null;
         },
         inviteFriendRequest(state) {
@@ -60,7 +62,21 @@ const usersSlice = createSlice({
         inviteFriendFailure(state, {payload: error}) {
             state.inviteLoading = false;
             state.inviteError = error;
-        }
+        },
+        clearInviteError(state) {
+            state.inviteError = null;
+        },
+        deleteFriendRequest(state) {
+            state.deleteFriendLoading = true;
+        },
+        deleteFriendSuccess(state, {payload: user}) {
+            state.deleteFriendLoading = false;
+            state.user = user;
+        },
+        deleteFriendFailure(state, {payload: error}) {
+            state.deleteFriendLoading = false;
+            state.deleteFriendError = error;
+        },
     }
 });
 

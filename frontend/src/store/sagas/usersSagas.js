@@ -8,7 +8,12 @@ import {
     loginUserSuccess,
     loginUserRequest,
     facebookLoginRequest,
-    logoutUserRequest, inviteFriendFailure, inviteFriendSuccess, inviteFriendRequest
+    logoutUserRequest,
+    inviteFriendFailure,
+    inviteFriendSuccess,
+    inviteFriendRequest,
+    deleteFriendFailure,
+    deleteFriendSuccess, deleteFriendRequest
 } from "../actions/usersActions";
 
 import history from "../../history";
@@ -82,12 +87,25 @@ export function* inviteFriendSaga({payload: friendEmail}) {
     }
 }
 
+export function* deleteFriendSaga({payload: friendId}) {
+    try {
+        const response = yield axiosApi.delete('/users/invite/' + friendId);
+
+        if (response.data) {
+            yield put(deleteFriendSuccess(response.data));
+        }
+    } catch (e) {
+        yield put(deleteFriendFailure(e));
+    }
+}
+
 const usersSagas = [
     takeEvery(registerUserRequest, registerUserSaga),
     takeEvery(loginUserRequest, loginUserSaga),
     takeEvery(facebookLoginRequest, facebookLoginSaga),
     takeEvery(logoutUserRequest, logoutUserSaga),
     takeEvery(inviteFriendRequest, inviteFriendSaga),
+    takeEvery(deleteFriendRequest, deleteFriendSaga),
 ];
 
 export default usersSagas;
