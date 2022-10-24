@@ -5,9 +5,11 @@ import {loadFromLocalStorage, saveToLocalStorage} from "./localStorage";
 import axiosApi from "../axiosApi";
 import rootSagas from "./rootSagas";
 import usersSlice, {initialState} from "./slices/usersSlice";
+import eventsSlice from "./slices/eventsSlice";
 
 const rootReducer = combineReducers({
     users: usersSlice.reducer,
+    events: eventsSlice.reducer,
 });
 
 const persistedState = loadFromLocalStorage();

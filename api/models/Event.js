@@ -15,6 +15,14 @@ const EventSchema = new Schema({
     date: {
         type: String,
         required: true,
+        validate: {
+            validator: date => {
+                if (new Date(date).toISOString() > new Date('2030-01-01').toISOString()) {
+                    return false;
+                }
+            },
+            message: "The maximum value should be 2030-01-01."
+        }
     },
     leadTime: {
         type: String,

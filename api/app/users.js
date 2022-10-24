@@ -19,8 +19,8 @@ router.post('/invite', auth, async (req, res ) => {
         const friend = await User.find({email});
         const user = await User.findById(userId);
 
-        user.addToInvited(friend['_id']);
-        friend.addToInviters(user['_id']);
+        user.addToInvited({id: friend['_id'], email: friend['email']});
+        friend.addToInviters({id: user['_id'], email: user['email']});
 
         await user.save({validateBeforeSave: false});
         await friend.save({validateBeforeSave: false});
@@ -116,8 +116,8 @@ router.delete('/invite/:id', auth, async (req, res) => {
         const friend = await User.findById(friendId);
         const user = await User.findById(userId);
 
-        const removeInvited = user.removeFromInvited(friend['_id']);
-        const removeInviters = friend.removeFromInviters(user['_id']);
+        const removeInvited = user.removeFromInvited({id: friend['_id'], email: friend['email']});
+        const removeInviters = friend.removeFromInviters({id: user['_id'], email: user['email']});
 
         if (!removeInvited || !removeInviters) {
             return res.status(404).send({message: "No user found with this id."});

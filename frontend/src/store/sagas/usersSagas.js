@@ -54,7 +54,7 @@ export function* facebookLoginSaga({payload: userData}) {
     }
 }
 
-export function* logoutUser({payload: userToken}) {
+export function* logoutUserSaga({payload: userToken}) {
     try {
         const headers = {'Authorization': userToken};
 
@@ -69,7 +69,7 @@ const usersSagas = [
     takeEvery(registerUserRequest, registerUserSaga),
     takeEvery(loginUserRequest, loginUserSaga),
     takeEvery(facebookLoginRequest, facebookLoginSaga),
-    takeEvery(logoutUserRequest, logoutUser),
+    takeEvery(logoutUserRequest, logoutUserSaga),
 ];
 
 export default usersSagas;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const {nanoid} = require('nanoid');
 
-const { Schema, model } = mongoose;
+const {Schema, model} = mongoose;
 
 const SALT_WORK_FACTOR = 10;
 
@@ -42,8 +42,8 @@ const UserSchema = new Schema({
         required: true,
     },
     facebookId: String,
-    invited: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-    inviters: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    invited: [{type: Object}],
+    inviters: [{type: Object}],
 });
 
 UserSchema.pre('save', async function (next) {
@@ -62,26 +62,26 @@ UserSchema.set('toJSON', {
     },
 });
 
-UserSchema.methods.addToInvited = function (user) {
-    return this.invited = [...this.invited, user];
+UserSchema.methods.addToInvited = function (userData) {
+    return this.invited = [...this.invited, userData];
 };
 
-UserSchema.methods.addToInviters = function (user) {
-    return this.inviters = [...this.inviters, user];
+UserSchema.methods.addToInviters = function (userData) {
+    return this.inviters = [...this.inviters, userData];
 };
 
-UserSchema.methods.removeFromInvited = function (user) {
-    const userIdx = this.invited.indexOf(user);
-    if (userIdx !== -1) {
-        return this.invited.splice(1, userIdx);
+UserSchema.methods.removeFromInvited = function (userData) {
+    const userDataIdx = this.invited.indexOf(userData);
+    if (userDataIdx !== -1) {
+        return this.invited.splice(1, userDataIdx);
     }
     return false;
 };
 
-UserSchema.methods.removeFromInviters = function (user) {
-    const userIdx = this.inviters.indexOf(user);
-    if (userIdx !== -1) {
-        return this.inviters.splice(1, userIdx);
+UserSchema.methods.removeFromInviters = function (userData) {
+    const userDataIdx = this.inviters.indexOf(userData);
+    if (userDataIdx !== -1) {
+        return this.inviters.splice(1, userDataIdx);
     }
     return false;
 };

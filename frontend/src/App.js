@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import Register from "./containers/Register/Register";
 import Main from "./containers/Main/Main";
 import Login from "./containers/Login/Login";
+import AddEventForm from "./components/AddEventForm/AddEventForm";
 
 const ProtectedRoute = ({isAllowed, redirectTo, ...props}) => {
     return isAllowed ?
@@ -32,6 +33,13 @@ const App = () => {
                     redirectTo="/"
                     path="/login"
                     component={Login}
+                />
+
+                <ProtectedRoute
+                    isAllowed={user}
+                    redirectTo="/login"
+                    path="/addEvent"
+                    component={AddEventForm}
                 />
 
             </Switch>
