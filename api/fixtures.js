@@ -35,7 +35,7 @@ const run = async () => {
         author: admin['_id'],
         title: 'Event by admin 2',
         leadTime: '12.00 h',
-        date: '2022-11-01T09:37:08.911Z',
+        date: '2022-11-05T09:37:08.911Z',
     }, {
         author: user['_id'],
         title: 'Event by user',

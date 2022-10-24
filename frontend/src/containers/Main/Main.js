@@ -38,15 +38,19 @@ const Main = () => {
                     ? <Grid item xs={9}>
                         {events.map(event => {
                             if (!!user?.inviters.filter(user => user.id === event.author).length || user['_id'] === event.author) {
-                                return <Event
-                                    key={event['_id']}
-                                    user={user}
-                                    authorId={event.author}
-                                    title={event.title}
-                                    date={event.date}
-                                    leadTime={event.leadTime}
-                                    deleteHandler={() => deleteEventHandler(event['_id'])}
-                                />;
+                                if (new Date(event.date).toLocaleDateString('en-CA') >= new Date().toLocaleDateString('en-CA')) {
+                                    return <Event
+                                        key={event['_id']}
+                                        user={user}
+                                        authorId={event.author}
+                                        title={event.title}
+                                        date={event.date}
+                                        leadTime={event.leadTime}
+                                        deleteHandler={() => deleteEventHandler(event['_id'])}
+                                    />;
+                                } else {
+                                    return null;
+                                }
                             } else {
                                 return null;
                             }
