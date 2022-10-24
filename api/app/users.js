@@ -34,9 +34,9 @@ router.post('/invite', auth, async (req, res) => {
             return res.status(404).send({message: "User with this email not found!"});
         }
 
-        const arr = user['invited'].find(user => user.id === friend[0]['_id'].toString());
+        const checkFriendUnique = user['invited'].find(user => user.id === friend[0]['_id'].toString());
 
-        if (arr) {
+        if (checkFriendUnique) {
             return res.status(400).send({message: "This user is already your friend."});
         }
 
@@ -64,7 +64,7 @@ router.post('/invite', auth, async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const {password, email, displayName} = req.body;
+        const { password, email, displayName } = req.body;
 
         const userData = {password, email, displayName};
 
@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/sessions', async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({email});
 
@@ -107,7 +107,7 @@ router.post('/facebookLogin', async (req, res) => {
     const debugTokenUrl = `https://graph.facebook.com/debug_token?input_token=${inputToken}&access_token=${accessToken}`;
 
     try {
-        const {data} = await axios.get(debugTokenUrl);
+        const { data } = await axios.get(debugTokenUrl);
 
         if (data.data.error) {
             return res.status(401).send({message: "Facebook token incorrect!"});

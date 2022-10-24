@@ -61,22 +61,6 @@ UserSchema.set('toJSON', {
     },
 });
 
-// UserSchema.methods.removeFromInvited = function (userData) {
-//     const userDataIdx = this.invited.indexOf(userData);
-//     if (userDataIdx !== -1) {
-//         return this.invited.splice(1, userDataIdx);
-//     }
-//     return false;
-// };
-//
-// UserSchema.methods.removeFromInviters = function (userData) {
-//     const userDataIdx = this.inviters.indexOf(userData);
-//     if (userDataIdx !== -1) {
-//         return this.inviters.splice(1, userDataIdx);
-//     }
-//     return false;
-// };
-
 UserSchema.methods.checkPassword = function (password) {
     return bcrypt.compare(password, this.password);
 };

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Container, Grid, Typography} from "@mui/material";
-import FormElement from "../../components/UI/Form/FormElement/FormElement";
 import {makeStyles} from "tss-react/mui";
 import {useDispatch, useSelector} from "react-redux";
+import FormElement from "../../components/UI/Form/FormElement/FormElement";
 import {clearInviteError, inviteFriendRequest} from "../../store/actions/usersActions";
+import Preloader from "../../components/UI/Preloader/Prealoder";
 
 const useStyles = makeStyles()(theme => ({
     paper: {
@@ -20,6 +21,7 @@ const InviteForm = () => {
     const dispatch = useDispatch();
 
     const error = useSelector(state => state.users.inviteError);
+    const loading = useSelector(state => state.users.inviteLoading);
 
     const [friendEmail, setFriendEmail] = useState('');
 
@@ -27,7 +29,7 @@ const InviteForm = () => {
         return () => {
             dispatch(clearInviteError());
         };
-    }, []);
+    }, [dispatch]);
 
     const submitFormHandler = e => {
         e.preventDefault();
@@ -43,39 +45,44 @@ const InviteForm = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h6">
-                    Invite friend
-                </Typography>
+        <>
+            <Preloader
+                showPreloader={loading}
+            />
+            <Container maxWidth="sm">
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h6">
+                        Invite friend
+                    </Typography>
 
-                <Grid
-                    component="form"
-                    onSubmit={submitFormHandler}
-                    container
-                    spacing={2}
-                >
-                    <FormElement
-                        name='email'
-                        label='Email'
-                        required={true}
-                        onChange={e => setFriendEmail(e.target.value)}
-                        value={friendEmail}
-                        error={getFieldError()}
-                    />
+                    <Grid
+                        component="form"
+                        onSubmit={submitFormHandler}
+                        container
+                        spacing={2}
+                    >
+                        <FormElement
+                            name='email'
+                            label='Email'
+                            required={true}
+                            onChange={e => setFriendEmail(e.target.value)}
+                            value={friendEmail}
+                            error={getFieldError()}
+                        />
 
-                    <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
-                        <Button
-                            variant='outlined'
-                            type='submit'
-                        >
-                            Invite
-                        </Button>
+                        <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
+                            <Button
+                                variant='outlined'
+                                type='submit'
+                            >
+                                Invite
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-            </div>
-        </Container>
+                </div>
+            </Container>
+        </>
     );
 };
 

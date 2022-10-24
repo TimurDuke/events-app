@@ -13,16 +13,19 @@ import {
     inviteFriendSuccess,
     inviteFriendRequest,
     deleteFriendFailure,
-    deleteFriendSuccess, deleteFriendRequest
+    deleteFriendSuccess,
+    deleteFriendRequest
 } from "../actions/usersActions";
 
 import history from "../../history";
+import {addNotificationSuccess} from "../../notifications";
 
 export function* registerUserSaga({payload: userData}) {
     try {
         const response = yield axiosApi.post('/users', userData);
 
         yield put(registerUserSuccess(response.data));
+        addNotificationSuccess('You have successfully registered.');
         history.push('/');
     } catch (e) {
         if (e.response && e.response.data) {
@@ -39,6 +42,7 @@ export function* loginUserSaga({payload: userData}) {
 
         yield put(loginUserSuccess(response.data));
         history.push('/');
+        addNotificationSuccess('You have successfully login.');
     } catch (e) {
         if (e.response && e.response.data) {
             yield put(loginUserFailure(e.response.data));
@@ -54,6 +58,7 @@ export function* facebookLoginSaga({payload: userData}) {
 
         yield put(loginUserSuccess(response.data));
         history.push('/');
+        addNotificationSuccess('You have successfully login.');
     } catch (e) {
         yield put(loginUserFailure(e.response.data));
     }
@@ -77,6 +82,7 @@ export function* inviteFriendSaga({payload: friendEmail}) {
         if (response.data) {
             yield put(inviteFriendSuccess(response.data));
             history.push('/');
+            addNotificationSuccess('You have successfully added to friends.');
         }
     } catch (e) {
         if (e.response && e.response.data) {
@@ -93,6 +99,7 @@ export function* deleteFriendSaga({payload: friendId}) {
 
         if (response.data) {
             yield put(deleteFriendSuccess(response.data));
+            addNotificationSuccess('You have successfully unfriended.');
         }
     } catch (e) {
         yield put(deleteFriendFailure(e));

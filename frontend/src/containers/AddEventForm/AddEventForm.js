@@ -4,6 +4,7 @@ import {makeStyles} from "tss-react/mui";
 import {useDispatch, useSelector} from "react-redux";
 import FormElement from "../../components/UI/Form/FormElement/FormElement";
 import {postEventRequest} from "../../store/actions/eventsActions";
+import Preloader from "../../components/UI/Preloader/Prealoder";
 
 const useStyles = makeStyles()(theme => ({
     paper: {
@@ -54,6 +55,7 @@ const AddEventForm = () => {
     const dispatch = useDispatch();
 
     const error = useSelector(state => state.events.postEventError);
+    const loading = useSelector(state => state.events.postEventLoading);
 
     const [eventData, setEventDate] = useState({
         title: '',
@@ -84,61 +86,66 @@ const AddEventForm = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h6">
-                    Add event
-                </Typography>
+        <>
+            <Preloader
+                showPreloader={loading}
+            />
+            <Container maxWidth="sm">
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h6">
+                        Add event
+                    </Typography>
 
-                <Grid
-                    component="form"
-                    onSubmit={submitFormHandler}
-                    container
-                    spacing={2}
-                >
-                    <FormElement
-                        name='title'
-                        label='Title'
-                        required={true}
-                        onChange={inputChangeHandler}
-                        value={eventData.title}
-                        error={getFieldError('title')}
-                    />
+                    <Grid
+                        component="form"
+                        onSubmit={submitFormHandler}
+                        container
+                        spacing={2}
+                    >
+                        <FormElement
+                            name='title'
+                            label='Title'
+                            required={true}
+                            onChange={inputChangeHandler}
+                            value={eventData.title}
+                            error={getFieldError('title')}
+                        />
 
-                    <FormElement
-                        styles={classes.inputLead}
-                        name='leadTime'
-                        label='Lead Time'
-                        required={true}
-                        onChange={inputChangeHandler}
-                        type='time'
-                        value={eventData.leadTime}
-                        error={getFieldError('leadTime')}
-                    />
+                        <FormElement
+                            styles={classes.inputLead}
+                            name='leadTime'
+                            label='Lead Time'
+                            required={true}
+                            onChange={inputChangeHandler}
+                            type='time'
+                            value={eventData.leadTime}
+                            error={getFieldError('leadTime')}
+                        />
 
-                    <FormElement
-                        styles={classes.inputDate}
-                        name='date'
-                        label='Date'
-                        type='date'
-                        required={true}
-                        onChange={inputChangeHandler}
-                        value={eventData.date}
-                        error={getFieldError('date')}
-                    />
+                        <FormElement
+                            styles={classes.inputDate}
+                            name='date'
+                            label='Date'
+                            type='date'
+                            required={true}
+                            onChange={inputChangeHandler}
+                            value={eventData.date}
+                            error={getFieldError('date')}
+                        />
 
-                    <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
-                        <Button
-                            variant='outlined'
-                            type='submit'
-                        >
-                            Create
-                        </Button>
+                        <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
+                            <Button
+                                variant='outlined'
+                                type='submit'
+                            >
+                                Create
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-            </div>
-        </Container>
+                </div>
+            </Container>
+        </>
     );
 };
 

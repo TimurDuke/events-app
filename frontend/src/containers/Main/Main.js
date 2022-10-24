@@ -5,11 +5,14 @@ import {Grid} from "@mui/material";
 import {deleteEventRequest, getEventsRequest} from "../../store/actions/eventsActions";
 import Event from "../../components/Event/Event";
 import ButtonControllers from "../../components/ButtonControllers/ButtonControllers";
+import Preloader from "../../components/UI/Preloader/Prealoder";
 
 const Main = () => {
     const dispatch = useDispatch();
 
     const events = useSelector(state => state.events.events);
+    const loading = useSelector(state => state.events.getEventsLoading);
+
     const user = useSelector(state => state.users.user);
 
     useEffect(() => {
@@ -27,6 +30,9 @@ const Main = () => {
 
     return (
         <>
+            <Preloader
+                showPreloader={loading}
+            />
             <Grid container spacing={2}>
                 {!!events.length
                     ? <Grid item xs={9}>

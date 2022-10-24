@@ -12,6 +12,7 @@ import {
 } from "../actions/eventsActions";
 import axiosApi from "../../axiosApi";
 import history from "../../history";
+import {addNotificationSuccess} from "../../notifications";
 
 export function* getEventsSaga() {
     try {
@@ -30,6 +31,7 @@ export function* postEventSaga({payload: eventData}) {
         if (response.data) {
             yield put(postEventSuccss());
             history.push('/');
+            addNotificationSuccess('You have successfully created a new event.');
         }
     } catch (e) {
         if (e.response && e.response.data) {
