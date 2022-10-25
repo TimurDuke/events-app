@@ -4,10 +4,15 @@ const name = 'events';
 
 const initialState = {
     events: [],
+    event: null,
     getEventsLoading: false,
     getEventsError: null,
+    getEventLoading: false,
+    getEventError: null,
     postEventLoading: false,
     postEventError: null,
+    editEventLoading: false,
+    editEventError: null,
     deleteEventLoading: false,
     deleteEventError: null,
 };
@@ -26,6 +31,19 @@ const eventsSlice = createSlice({
             state.getEventsError = null;
         },
         getEventsFailure(state, {payload: error}) {
+            state.getEventsLoading = false;
+            state.getEventsError = error;
+        },
+        getEventRequest(state) {
+            state.getEventLoading = true;
+            state.getEventError = null;
+        },
+        getEventSuccess(state, {payload: event}) {
+            state.getEventLoading = false;
+            state.event = event;
+            state.getEventError = null;
+        },
+        getEventFailure(state, {payload: error}) {
             state.getEventLoading = false;
             state.getEventError = error;
         },
@@ -42,6 +60,16 @@ const eventsSlice = createSlice({
         clearPostEventErrors(state) {
             state.postEventError = null
         },
+        editEventRequest(state) {
+            state.editEventLoading = true;
+        },
+        editEventSuccess(state) {
+            state.editEventLoading = false;
+        },
+        editEventFailure(state, {payload: error}) {
+            state.editEventLoading = false;
+            state.editEventError = error;
+        },
         deleteEventRequest(state) {
             state.deleteEventLoading = true;
         },
@@ -51,7 +79,7 @@ const eventsSlice = createSlice({
         deleteEventFailure(state, {payload: error}) {
             state.deleteEventLoading = false;
             state.deleteEventError = error;
-        }
+        },
     }
 });
 

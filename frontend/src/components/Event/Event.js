@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import {Button, Card, CardActions, CardContent, Typography} from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import {Link} from "react-router-dom";
 
-const Event = ({user, authorId, title, date, leadTime, deleteHandler}) => (
+const Event = ({user, authorId, title, date, leadTime, deleteHandler, eventId}) => (
     <Card sx={{maxWidth: '80%', marginBottom: '20px'}}>
         <CardContent>
             <Typography variant="h5" component="div" sx={{marginBottom: '10px'}}>
@@ -44,6 +45,13 @@ const Event = ({user, authorId, title, date, leadTime, deleteHandler}) => (
         {user?._id === authorId
             ? <CardActions>
                 <Button
+                    color='primary'
+                    component={Link}
+                    to={'editEvent/' + eventId}
+                >
+                    Edit
+                </Button>
+                <Button
                     color='error'
                     onClick={deleteHandler}
                 >
@@ -60,6 +68,7 @@ Event.propTypes = {
     title: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     leadTime: PropTypes.string.isRequired,
+    eventId: PropTypes.string.isRequired,
     deleteHandler: PropTypes.func
 };
 

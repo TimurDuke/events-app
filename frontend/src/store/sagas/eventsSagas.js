@@ -3,12 +3,15 @@ import {
     deleteEventFailure,
     deleteEventRequest,
     deleteEventSuccess,
+    getEventFailure,
+    getEventRequest,
+    getEventSuccess,
     getEventsFailure,
     getEventsRequest,
     getEventsSuccess,
     postEventFailure,
     postEventRequest,
-    postEventSuccss
+    postEventSuccss, editEventFailure, editEventSuccess, editEventRequest
 } from "../actions/eventsActions";
 import axiosApi from "../../axiosApi";
 import history from "../../history";
@@ -21,6 +24,16 @@ export function* getEventsSaga() {
         yield put(getEventsSuccess(response.data));
     } catch (e) {
         yield put(getEventsFailure(e));
+    }
+}
+
+export function* getEventSaga({payload: eventId}) {
+    try {
+        const response = yield axiosApi('/events/' + eventId);
+
+        yield put(getEventSuccess(response.data));
+    } catch (e) {
+        yield put(getEventFailure(e));
     }
 }
 
@@ -42,6 +55,20 @@ export function* postEventSaga({payload: eventData}) {
     }
 }
 
+export function* editEventSaga({payload: event}) {
+    try {
+        const response = yield axiosApi.put('/events/' + event.id, event.data);
+
+        if (response.data) {
+            yield put(editEventSuccess());
+            history.push('/');
+            addNotificationSuccess(response.data);
+        }
+    } catch (e) {
+        yield put(editEventFailure(e));
+    }
+}
+
 export function* deleteEventSaga({payload: eventId}) {
     try {
         const response = yield axiosApi.delete('/events/' + eventId);
@@ -56,7 +83,9 @@ export function* deleteEventSaga({payload: eventId}) {
 
 const eventsSagas = [
     takeEvery(getEventsRequest, getEventsSaga),
+    takeEvery(getEventRequest, getEventSaga),
     takeEvery(postEventRequest, postEventSaga),
+    takeEvery(editEventRequest, editEventSaga),
     takeEvery(deleteEventRequest, deleteEventSaga),
 ];
 

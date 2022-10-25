@@ -8,6 +8,7 @@ import Login from "./containers/Login/Login";
 import AddEventForm from "./containers/AddEventForm/AddEventForm";
 import InviteForm from "./containers/IviteForm/InviteForm";
 import InvitedFriends from "./containers/InvitedFriends/InvitedFriends";
+import EditEventForm from "./containers/EditEventForm/EditEventForm";
 
 const ProtectedRoute = ({isAllowed, redirectTo, ...props}) => {
     return isAllowed ?
@@ -42,6 +43,13 @@ const App = () => {
                     redirectTo="/login"
                     path="/addEvent"
                     component={AddEventForm}
+                />
+
+                <ProtectedRoute
+                    isAllowed={user}
+                    redirectTo="/login"
+                    path="/editEvent/:id"
+                    component={EditEventForm}
                 />
 
                 <ProtectedRoute

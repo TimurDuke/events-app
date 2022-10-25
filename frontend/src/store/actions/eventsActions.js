@@ -5,9 +5,17 @@ export const {
     getEventsSuccess,
     getEventsFailure,
 
+    getEventRequest,
+    getEventSuccess,
+    getEventFailure,
+
     postEventRequest,
     postEventSuccss,
     postEventFailure,
+
+    editEventRequest,
+    editEventSuccess,
+    editEventFailure,
 
     deleteEventRequest,
     deleteEventSuccess,

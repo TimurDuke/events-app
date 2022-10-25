@@ -47,6 +47,7 @@ const Main = () => {
                                         date={event.date}
                                         leadTime={event.leadTime}
                                         deleteHandler={() => deleteEventHandler(event['_id'])}
+                                        eventId={event['_id']}
                                     />;
                                 } else {
                                     return null;
